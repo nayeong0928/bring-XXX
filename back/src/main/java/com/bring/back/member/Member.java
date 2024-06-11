@@ -29,4 +29,25 @@ public class Member {
         this.pwd = pwd;
     }
 
+    public String getName(){
+        return name;
+    }
+
+    public boolean matchPwd(String pwd){
+        if(this.pwd.equals(pwd)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb=new StringBuilder();
+        sb.append("Member [");
+        sb.append(this.id);
+        sb.append(", ");
+        sb.append(this.name);
+        sb.append("]");
+        return sb.toString();
+    }
 }

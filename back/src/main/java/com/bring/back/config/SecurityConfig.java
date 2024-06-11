@@ -43,6 +43,10 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
 
+                // h2 사용 위해
+                .headers().frameOptions().disable()
+                .and()
+
                 .authorizeHttpRequests().anyRequest().permitAll();
 
         return http.build();
