@@ -2,6 +2,7 @@ package com.bring.back.member;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+@Getter
 @Table(name="MEMBER")
 @NoArgsConstructor(force = true)
 public class Member {

@@ -1,9 +1,21 @@
 package com.bring.back.config;
 
+import com.bring.back.member.security.JwtAuthenticationFilter;
+import com.bring.back.member.security.JwtAuthenticationProvider;
+import com.bring.back.member.security.PrincipalDetailsService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -13,28 +25,29 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-    /**
-     * 비밀번호 설정을 위한 암호화 인코더를 리턴한다
-     *
-     * @return the b crypt password encoder
-     */
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    public SecurityConfig(AuthenticationManagerBuilder authenticationManagerBuilder,
+                          JwtAuthenticationProvider jwtAuthenticationProvider){
+        this.authenticationManagerBuilder=authenticationManagerBuilder;
+        this.authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        super.configure(web);
     }
 
     /**
      * jwt 처리를 위한 시큐리티 필터 체인을 추가한다
      *
      * @param http the http
-     * @return the security filter chain
      * @throws Exception 필터 체인 과정에서 에러가 발생하면 던짐
      */
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().disable()
                 .csrf().disable()
@@ -47,9 +60,12 @@ public class SecurityConfig {
                 .headers().frameOptions().disable()
                 .and()
 
-                .authorizeHttpRequests().anyRequest().permitAll();
-
-        return http.build();
+                // security filter
+                .authorizeRequests()
+                .antMatchers("/member/**").permitAll()
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManagerBuilder.getOrBuild()));
 
     }
+
 }
