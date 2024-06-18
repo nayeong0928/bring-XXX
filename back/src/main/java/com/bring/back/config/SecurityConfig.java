@@ -2,7 +2,6 @@ package com.bring.back.config;
 
 import com.bring.back.member.security.JwtAuthenticationFilter;
 import com.bring.back.member.security.JwtAuthenticationProvider;
-import com.bring.back.member.security.PrincipalDetailsService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
