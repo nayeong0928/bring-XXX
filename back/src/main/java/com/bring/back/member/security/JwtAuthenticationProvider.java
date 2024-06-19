@@ -1,10 +1,8 @@
 package com.bring.back.member.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -37,13 +35,16 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                     .build()
                     .parseClaimsJws(((JwtAuthenticationToken) authentication).getToken())
                     .getBody();
-        } catch (Exception e){
-            throw new AuthenticationException(e.getMessage()) {
-                @Override
-                public String getMessage() {
-                    return e.getMessage();
-                }
-            };
+        } catch (SignatureException se){
+            throw new JwtInvalidException("signatrue key is different", se);
+        } catch (ExpiredJwtException ee){
+            throw new JwtInvalidException("expired token", ee);
+        } catch (MalformedJwtException me){
+            throw new JwtInvalidException("malformed token", me);
+        } catch (IllegalArgumentException ie){
+            throw new JwtInvalidException("using illegal argument like null", ie);
+        } catch (UnsupportedJwtException ue){
+            throw new JwtInvalidException("malformed jwt", ue);
         }
 
         return new JwtAuthenticationToken(claims.getSubject(), "", null);
