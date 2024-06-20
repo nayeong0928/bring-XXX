@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,11 +18,11 @@ import java.util.List;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private final String secretKey;
+    private final SecretKey secretKey;
 
     public JwtAuthenticationProvider(@Value("${jwt.valid.key}") String secretKey) {
         System.out.println("secretKey = " + secretKey);
-        this.secretKey = secretKey;
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     @Override
@@ -31,7 +32,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         try {
             claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)  // Use Keys.hmacShaKeyFor for key conversion
+                    .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(((JwtAuthenticationToken) authentication).getToken())
                     .getBody();

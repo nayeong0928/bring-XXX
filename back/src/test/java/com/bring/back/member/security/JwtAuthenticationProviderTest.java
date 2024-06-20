@@ -3,6 +3,7 @@ package com.bring.back.member.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,16 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 class JwtAuthenticationProviderTest {
 
     JwtAuthenticationProvider provider;
     private static String secretKey="c2VjcmV0a2V5dXNpbmdpbmF1dGhlbnRpY2F0aW9ucHJvdmlkZXIxMjM0NTY3ODkwaGVsbG93b3JsZA==";
-
+    private SecretKey secretKeyByte;
+    
     @BeforeEach
     public void setup(){
         provider=new JwtAuthenticationProvider(secretKey);
+        secretKeyByte= Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     @Test
@@ -29,7 +33,7 @@ class JwtAuthenticationProviderTest {
         Claims claims = Jwts.claims().setSubject("유관순");
 
         String token=Jwts.builder()
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKeyByte)
                 .setClaims(claims)
                 .compact();
 
@@ -56,9 +60,11 @@ class JwtAuthenticationProviderTest {
     @DisplayName("key가 다른 경우 에러를 던진다")
     void authenticateFailKey(){
         Claims claims=Jwts.claims().setSubject("유관순");
+        String wrongKey="c2VjcmV0a2V5dXNpbmdpbmF1dGhlbnRpY2F0aW9ucHJvdmlkZXIxMjM0NTY3ODkwaGVsbG93b3JsZA";
+        SecretKey wrongKeyByte=Keys.hmacShaKeyFor(wrongKey.getBytes());
 
         String token=Jwts.builder()
-                .signWith(SignatureAlgorithm.HS256, "secretkeyusinginauthenticationprovider1234567890helloworld1".getBytes())
+                .signWith(wrongKeyByte)
                 .setClaims(claims)
                 .compact();
 
@@ -76,7 +82,7 @@ class JwtAuthenticationProviderTest {
         Date date=new Date();
 
         String token=Jwts.builder()
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKeyByte)
                 .setClaims(claims)
                 .setExpiration(new Date(date.getTime()))
                 .compact();
