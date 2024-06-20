@@ -17,11 +17,11 @@ import java.util.List;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private final byte[] secretKeyByte;
+    private final String secretKey;
 
     public JwtAuthenticationProvider(@Value("${jwt.valid.key}") String secretKey) {
         System.out.println("secretKey = " + secretKey);
-        this.secretKeyByte = secretKey.getBytes();
+        this.secretKey = secretKey;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         try {
             claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKeyByte)  // Use Keys.hmacShaKeyFor for key conversion
+                    .setSigningKey(secretKey)  // Use Keys.hmacShaKeyFor for key conversion
                     .build()
                     .parseClaimsJws(((JwtAuthenticationToken) authentication).getToken())
                     .getBody();

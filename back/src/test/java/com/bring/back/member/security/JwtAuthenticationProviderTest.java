@@ -1,25 +1,21 @@
 package com.bring.back.member.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.SignatureException;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 
 import java.util.Date;
 
 class JwtAuthenticationProviderTest {
 
     JwtAuthenticationProvider provider;
-    private static String secretKey="secretkeyusinginauthenticationprovider1234567890helloworld";
+    private static String secretKey="c2VjcmV0a2V5dXNpbmdpbmF1dGhlbnRpY2F0aW9ucHJvdmlkZXIxMjM0NTY3ODkwaGVsbG93b3JsZA==";
 
     @BeforeEach
     public void setup(){
@@ -33,7 +29,7 @@ class JwtAuthenticationProviderTest {
         Claims claims = Jwts.claims().setSubject("유관순");
 
         String token=Jwts.builder()
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .setClaims(claims)
                 .compact();
 
@@ -80,7 +76,7 @@ class JwtAuthenticationProviderTest {
         Date date=new Date();
 
         String token=Jwts.builder()
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .setClaims(claims)
                 .setExpiration(new Date(date.getTime()))
                 .compact();

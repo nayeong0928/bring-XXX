@@ -19,20 +19,4 @@ public class MemberController {
     @Autowired
     private final MemberService memberService;
 
-    @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody MemberJoinRequestDto dto){
-        String result= memberService.join(dto);
-        HashMap<String, String> map=new HashMap();
-        map.put("msg", result);
-        return ResponseEntity.ok(map);
-    }
-
-    @PostMapping
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto dto){
-        String result= memberService.login(dto);
-        HashMap<String, String> map=new HashMap();
-        map.put("msg", result);
-        return ResponseEntity.ok(map);
-    }
-
 }
