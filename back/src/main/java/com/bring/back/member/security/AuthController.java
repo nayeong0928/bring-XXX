@@ -5,10 +5,7 @@ import com.bring.back.member.dto.MemberJoinRequestDto;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -20,6 +17,8 @@ public class AuthController {
     @Autowired
     private final AuthService authService;
 
+    private final String AUTHORIZATION_HEADER="Authorization";
+
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody MemberJoinRequestDto dto){
 
@@ -28,7 +27,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto dto){
+        JwtDto jwt = authService.login(dto);
+        return ResponseEntity.ok(jwt);
+    }
 
-        return ResponseEntity.ok("");
+    @PostMapping("/login")
+    public ResponseEntity<?> reissue(@RequestHeader(AUTHORIZATION_HEADER)String token){
+        JwtDto jwt = authService.reissue(token);
+        return ResponseEntity.ok(jwt);
     }
 }
