@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * The type Security config.
@@ -61,9 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
                 // security filter
                 .authorizeRequests()
-                .antMatchers("/member/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManagerBuilder.getOrBuild()));
+                .addFilterBefore(new JwtAuthenticationFilter(authenticationManagerBuilder.getOrBuild()), UsernamePasswordAuthenticationFilter.class);
 
     }
 
