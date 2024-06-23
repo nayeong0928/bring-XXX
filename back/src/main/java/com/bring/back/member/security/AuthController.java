@@ -31,7 +31,7 @@ public class AuthController {
         return ResponseEntity.ok(jwt);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@RequestHeader(AUTHORIZATION_HEADER)String token){
         JwtDto jwt = authService.reissue(token);
         return ResponseEntity.ok(jwt);

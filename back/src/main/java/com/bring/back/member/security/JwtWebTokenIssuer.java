@@ -21,9 +21,9 @@ public class JwtWebTokenIssuer {
 
     public JwtWebTokenIssuer(
             @Value("${jwt.valid.key}") String secretKey,
-            @Value("${jwt.refresh.key") String refreshKey,
-            @Value("${jwt.expire.min:10") int expireMin,
-            @Value("${jwt.refresh.expire.min:30") int refreshExpireMin
+            @Value("${jwt.refresh.key}") String refreshKey,
+            @Value("${jwt.expire.min:10}") int expireMin,
+            @Value("${jwt.refresh.expire.min:30}") int refreshExpireMin
     ) {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes());
         this.refreshKey = Keys.hmacShaKeyFor(refreshKey.getBytes());
