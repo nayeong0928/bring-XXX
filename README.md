@@ -1,4 +1,4 @@
-[https://www.inflearn.com/course/스프링-mvc-1/dashboard](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-mvc-1/dashboard) 을 수강하며 프로젝트 진행중
+[자바 ORM 표준 JPA 프로그래밍](https://www.inflearn.com/course/ORM-JPA-Basic) 을 수강하며 프로젝트 진행중
 
 ### 설계
 
