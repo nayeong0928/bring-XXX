@@ -8,13 +8,22 @@ public class Forecast {
     @Id @GeneratedValue
     private Long id;
 
-    @Column(name = "location_id")
-    private Long locationId;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
 
     @Enumerated(EnumType.STRING)
     private WeatherCode weatherCode;
 
     private int time;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
     public Long getId() {
         return id;
@@ -22,14 +31,6 @@ public class Forecast {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(Long locationId) {
-        this.locationId = locationId;
     }
 
     public WeatherCode getWeatherCode() {
