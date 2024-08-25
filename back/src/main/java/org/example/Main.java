@@ -27,9 +27,7 @@ public class Main {
             em.persist(member2);
 
             // 소지품 추가
-            Bring bring=new Bring();
-            bring.setName("우산");
-            bring.setWeatherCode(WeatherCode.RAIN);
+            Bring bring=new Umbrella();
             em.persist(bring);
 
             // 장소 추가
@@ -70,6 +68,7 @@ public class Main {
 
             tx.commit();
         } catch (Exception e){
+            e.printStackTrace();
             tx.rollback();
         } finally{
             em.close();
