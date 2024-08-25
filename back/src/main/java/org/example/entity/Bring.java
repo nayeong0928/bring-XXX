@@ -3,7 +3,9 @@ package org.example.entity;
 import javax.persistence.*;
 
 @Entity
-public class Bring {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn
+public abstract class Bring {
 
     @Id @GeneratedValue
     private Long id;

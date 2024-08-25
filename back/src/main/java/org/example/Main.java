@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.entity.*;
-import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,43 +16,59 @@ public class Main {
         tx.begin();
 
         try{
+
             // 회원 추가
             Member member=new Member();
             member.setName("홍길동");
             em.persist(member);
 
+            Member member2=new Member();
+            member2.setName("임꺽정");
+            em.persist(member2);
+
             // 소지품 추가
-            Bring bring=new Bring();
-            bring.setName("우산");
-            bring.setWeatherCode(WeatherCode.RAIN);
+            Bring bring=new Umbrella();
             em.persist(bring);
 
-            // 위치 추가
+            // 장소 추가
             Location location=new Location();
-            location.setName("강남역");
+            location.setName("강남구");
             em.persist(location);
 
-            // 스케줄 추가
+            // 일정 추가
             Schedule schedule=new Schedule();
-            schedule.setTime(3);
-            Member findM=em.find(Member.class, member.getId());
-            schedule.setMemberId(findM.getId());
-            Bring findB=em.find(Bring.class, bring.getId());
-            schedule.setBringId(findB.getId());
-            Location findL=em.find(Location.class, location.getId());
-            schedule.setLocationId(findL.getId());
+            schedule.setMember(member);
+            schedule.setLocation(location);
+            schedule.setBring(bring);
+            schedule.setTime(12);
             em.persist(schedule);
 
-            // 기상예보 추가
+            // 일정 추가
+            Schedule schedule2=new Schedule();
+            schedule2.setMember(member2);
+            schedule2.setLocation(location);
+            schedule2.setBring(bring);
+            schedule2.setTime(12);
+            em.persist(schedule2);
+
+            // 예보 추가
             Forecast forecast=new Forecast();
-            forecast.setTime(3);
+            forecast.setTime(12);
             forecast.setWeatherCode(WeatherCode.RAIN);
-            Location foreLoc=em.find(Location.class, location.getId());
-            forecast.setLocationId(foreLoc.getId());
+            forecast.setLocation(location);
             em.persist(forecast);
+
+            // 예보 추가된 지역에 일정 등록한 사람들 알아내기
+            System.out.println("강남구 12시 예보 추가");
+            forecast.getLocation().getSchedules().forEach(
+                    s->{
+                        System.out.println(s.getMember().getName());
+                    }
+            );
 
             tx.commit();
         } catch (Exception e){
+            e.printStackTrace();
             tx.rollback();
         } finally{
             em.close();

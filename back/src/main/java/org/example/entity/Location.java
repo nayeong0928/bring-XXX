@@ -3,6 +3,9 @@ package org.example.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Location {
@@ -13,6 +16,17 @@ public class Location {
     private String name;
     private Double latitude;
     private Double longitude;
+
+    @OneToMany(mappedBy = "location")
+    private List<Schedule> schedules=new ArrayList<>();
+
+    public List<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void addSchedule(Schedule schedule) {
+        this.schedules.add(schedule);
+    }
 
     public Long getId() {
         return id;
