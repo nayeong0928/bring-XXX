@@ -1,9 +1,6 @@
 package org.example.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Schedule {
@@ -11,16 +8,44 @@ public class Schedule {
     @Id @GeneratedValue
     private Long id;
 
-    @Column(name = "member_id")
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @Column(name = "bring_id")
-    private Long bringId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bring_id")
+    private Bring bring;
 
-    @Column(name = "location_id")
-    private Long locationId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    private Location location;
 
     private int time;
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public Bring getBring() {
+        return bring;
+    }
+
+    public void setBring(Bring bring) {
+        this.bring = bring;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+        location.addSchedule(this);
+    }
 
     public Long getId() {
         return id;
@@ -28,30 +53,6 @@ public class Schedule {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public Long getBringId() {
-        return bringId;
-    }
-
-    public void setBringId(Long bringId) {
-        this.bringId = bringId;
-    }
-
-    public Long getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(Long locationId) {
-        this.locationId = locationId;
     }
 
     public int getTime() {
