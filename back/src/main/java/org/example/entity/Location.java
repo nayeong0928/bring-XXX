@@ -1,62 +1,32 @@
 package org.example.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Embeddable;
+import java.util.Objects;
 
-@Entity
+@Embeddable
 public class Location {
 
-    @Id @GeneratedValue
-    private Long id;
+    private double latitude;
+    private double longitude;
 
-    private String name;
-    private Double latitude;
-    private Double longitude;
-
-    @OneToMany(mappedBy = "location")
-    private List<Schedule> schedules=new ArrayList<>();
-
-    public List<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void addSchedule(Schedule schedule) {
-        this.schedules.add(schedule);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return Double.compare(latitude, location.latitude) == 0 && Double.compare(longitude, location.longitude) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(latitude, longitude);
     }
 }
