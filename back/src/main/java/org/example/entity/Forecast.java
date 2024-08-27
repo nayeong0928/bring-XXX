@@ -8,14 +8,13 @@ public class Forecast {
     @Id @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private Location location;
-
     @Enumerated(EnumType.STRING)
     private WeatherCode weatherCode;
 
     private int time;
+
+    @Embedded
+    private Location location;
 
     public Location getLocation() {
         return location;
