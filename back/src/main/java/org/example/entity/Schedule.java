@@ -17,8 +17,8 @@ public class Schedule {
     private Bring bring;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private Location location;
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     private int time;
 
@@ -38,13 +38,13 @@ public class Schedule {
         this.bring = bring;
     }
 
-    public Location getLocation() {
-        return location;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
-        location.addSchedule(this);
+    public void setAddress(Address address) {
+        this.address = address;
+        address.addSchedule(this);
     }
 
     public Long getId() {
