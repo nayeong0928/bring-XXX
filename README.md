@@ -1,16 +1,30 @@
-### 설계
-
-1. [요구사항 정의서](./doc/요구사항%20정의서.md)
-2. [기능 모델링](./doc/기능%20모델링.md)
-3. [ERD](https://app.diagrams.net/#G1HtMhxSTaA97pzdhlnT8RcZDRTjBsDJBA#%7B%22pageId%22%3A%22R2lEEEUBdFMjLlhIrx00%22%7D)
-
 # bring-XXX
 
 사용자가 등록해둔 장소&amp;시간의 날씨 정보에 따라 그 날 챙겨야 할 소지품들을 알려주는 프로그램
 
 &nbsp;
 
-# Branch Description
+## 설계
 
-![image](https://github.com/yeong-coding/bring-XXX/assets/141029852/f1421012-dee1-4581-a977-238dea88e9c8)
+1. [요구사항 정의서](./doc/요구사항%20정의서.md)
 
+2. [기능 모델링](./doc/기능%20모델링.md)
+
+3. 클래스 다이어그램
+
+   ![클래스 다이어그램](./doc/클래스%20다이어그램v1.2.jpg)
+
+4. ERD
+
+   ![ERD](./doc/테이블%20설계.jpg)
+
+&nbsp;
+
+## Milestones
+
+- 프로젝트 엔티티 구현: 진행중
+  - 연관관계 매핑 (완료)
+  - 상속관계 매핑 도입 (완료)
+  - 주소 저장 형식 변경 (완료)
+  - 테이블 설계 (완료)
+  - Forecast DB 저장 여부 (미완료)
