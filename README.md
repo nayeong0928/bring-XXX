@@ -20,11 +20,6 @@
 
 &nbsp;
 
-## Milestones
+## 날씨 데이터 출처 
 
-- 프로젝트 엔티티 구현: 진행중
-  - 연관관계 매핑 (완료)
-  - 상속관계 매핑 도입 (완료)
-  - 주소 저장 형식 변경 (완료)
-  - 테이블 설계 (완료)
-  - Forecast DB 저장 여부 (미완료)
+[기상청_단기예보 ((구)_동네예보) 조회서비스](https://www.data.go.kr/iim/api/selectAPIAcountView.do)
