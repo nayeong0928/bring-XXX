@@ -18,4 +18,14 @@ public class Address {
 
     @Embedded
     private Location location;
+
+    protected Address(){}
+
+    public Address(String code, String addr1, String addr2, String addr3, String nx, String ny) {
+        this.code = code;
+        this.addr1 = addr1;
+        this.addr2 = addr2;
+        this.addr3 = addr3;
+        this.location=new Location(nx, ny);
+    }
 }
