@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>행정구역코드</th>
+                <th>1단계</th>
+                <th>2단계</th>
+                <th>3단계</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="address : ${addresses}">
+                <td th:text="${address.getId()}"></td>
+                <td th:text="${address.getCode()}"></td>
+                <td th:text="${address?.getAddr1()}"></td>
+                <td th:text="${address?.getAddr2()}"></td>
+                <td th:text="${address?.getAddr3()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+</body>
+</html>
