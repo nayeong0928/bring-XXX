@@ -20,19 +20,29 @@
                 <th:block th:if="${timeblock.get(num) != null}">
                     <td th:text="${timeblock.get(num).getAddressStr()}"></td>
                     <td>
-                        <a class="btn btn-sm btn-outline-warning"
+                        <a class="btn btn-outline-warning"
                            th:href="@{/schedules/delete/{id} (id=${timeblock.get(num).getScheduleId()})}">삭제</a>
                     </td>
                 </th:block>
                 <th:block th:if="${timeblock.get(num) == null}">
                     <td>
                         <form role="form" action="/schedules/new" th:object="${addScheduleDto}" method="post">
-                            <input type="hidden" th:value="${memberId}" th:name="memberId"/>
-                            <input type="hidden" th:value="${num}" th:name="time" />
-                            <input type="text" th:field="*{address}" class="form-control" placeholder="주소를 입력하세요">
-                            <button type="submit" class="btn btn-sm btn-primary">추가</button>
+                            <div class="input-group">
+                                <input type="hidden" th:value="${memberId}" th:name="memberId"/>
+                                <input type="hidden" th:value="${num}" th:name="time" />
+                                <input type="text" th:field="*{address}" class="form-control" placeholder="주소를 입력하세요" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button">검색</button>
+                                    <button class="btn btn-outline-primary" type="submit">추가</button>
+                                </div>
+                            </div>
+<!--                            <input type="hidden" th:value="${memberId}" th:name="memberId"/>-->
+<!--                            <input type="hidden" th:value="${num}" th:name="time" />-->
+<!--                            <input type="text" th:field="*{address}" class="form-control" placeholder="주소를 입력하세요">-->
+<!--                            <button type="submit" class="btn btn-sm btn-primary">추가</button>-->
                         </form>
                     </td>
+                    <td></td>
                 </th:block>
             </tr>
             </tbody>
