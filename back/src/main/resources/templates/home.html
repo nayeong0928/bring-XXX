@@ -23,7 +23,31 @@
             <a class="btn btn-lg btn-secondary" href="/address/new">주소 세팅</a>
             <a class="btn btn-lg btn-secondary" href="/address">주소 목록</a>
         </p>
+
     </div>
+
+    <p class="lead">회원 목록</p>
+    <p>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+                <th>스케줄</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.name}"></td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary"
+                       th:href="@{/schedules/{id} (id=${member.id})}">등록</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </p>
 
     <div th:replace="fragments/footer :: footer" />
 

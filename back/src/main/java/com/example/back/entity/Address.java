@@ -28,4 +28,9 @@ public class Address {
         this.addr3 = addr3;
         this.location=new Location(nx, ny);
     }
+
+    @Override
+    public String toString() {
+        return addr1+" "+addr2+" "+addr3;
+    }
 }

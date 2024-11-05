@@ -22,4 +22,8 @@ public class AddressRepository {
         return em.createQuery("select a from Address a", Address.class)
                 .getResultList();
     }
+
+    public Address findOne(Long id){
+        return em.find(Address.class, id);
+    }
 }

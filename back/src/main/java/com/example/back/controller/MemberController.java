@@ -15,6 +15,12 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @GetMapping("/")
+    public String dashboard(Model model){
+        model.addAttribute("members", memberService.findMembers());
+        return "home";
+    }
+
     @GetMapping("/members/new")
     public String memberJoinForm(Model model){
         model.addAttribute("memberDto", new MemberDto());

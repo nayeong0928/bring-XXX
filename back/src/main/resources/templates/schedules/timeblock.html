@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>시간</th>
+                <th>장소</th>
+                <th>버튼</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="num : ${#numbers.sequence(0,24)}">
+                <td th:text="${num}"></td>
+                <th:block th:if="${timeblock.get(num) != null}">
+                    <td th:text="${timeblock.get(num).getAddressStr()}"></td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-warning"
+                           th:href="@{/schedules/delete/{id} (id=${timeblock.get(num).getScheduleId()})}">삭제</a>
+                    </td>
+                </th:block>
+                <th:block th:if="${timeblock.get(num) == null}">
+                    <td>
+                        <form role="form" action="/schedules/new" th:object="${addScheduleDto}" method="post">
+                            <input type="hidden" th:value="${memberId}" th:name="memberId"/>
+                            <input type="hidden" th:value="${num}" th:name="time" />
+                            <input type="text" th:field="*{address}" class="form-control" placeholder="주소를 입력하세요">
+                            <button type="submit" class="btn btn-sm btn-primary">추가</button>
+                        </form>
+                    </td>
+                </th:block>
+            </tr>
+            </tbody>
+        </table>
+        <!-- 주소 입력 필드 추가 -->
+        <div class="mt-3">
+            <label for="addressInput">주소:</label>
+            <input type="text" id="addressInput" class="form-control" placeholder="주소 입력" />
+        </div>
+        <!-- 등록 버튼 -->
+        <button type="button" class="btn btn-primary mt-3" onclick="addSchedule()">선택한 시간대 등록</button>
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+</body>
+</html>
