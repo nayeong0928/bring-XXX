@@ -5,6 +5,21 @@
 
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">주소 검색</h5>
+            <p class="card-text">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="주소를 검색하세요" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">검색</button>
+                </div>
+            </div>
+            </p>
+        </div>
+    </div>
+
     <div>
         <table class="table table-striped">
             <thead>
