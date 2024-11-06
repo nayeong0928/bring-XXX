@@ -1,5 +1,6 @@
 package com.example.back.entity;
 
+import com.example.back.weather.WeatherStation;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -19,6 +20,9 @@ public class Address {
     @Embedded
     private Location location;
 
+    @Transient
+    private WeatherStation weatherStation;
+
     protected Address(){}
 
     public Address(String code, String addr1, String addr2, String addr3, String nx, String ny) {
@@ -27,6 +31,7 @@ public class Address {
         this.addr2 = addr2;
         this.addr3 = addr3;
         this.location=new Location(nx, ny);
+        weatherStation = new WeatherStation(location); // 각 장소에 대하여 API Subject 등록
     }
 
     @Override

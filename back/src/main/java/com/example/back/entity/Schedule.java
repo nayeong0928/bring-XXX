@@ -38,6 +38,7 @@ public class Schedule {
         schedule.setMember(member);
         schedule.setAddress(address);
         schedule.time=time;
+        address.getWeatherStation().addObserver(time, schedule.getId());
         return schedule;
     }
 }
