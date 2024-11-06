@@ -4,12 +4,10 @@ import com.example.back.dto.ScheduleDto;
 import com.example.back.dto.TimeBlock;
 import com.example.back.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,11 +32,11 @@ public class ScheduleController {
     }
 
     @PostMapping("/schedules/new")
-    public String addSchedule(ScheduleDto scheduleDto){
+    @ResponseBody
+    public ResponseEntity<?> addSchedule(@RequestBody ScheduleDto scheduleDto){
         scheduleService.addSchedule(scheduleDto.getMemberId(),
-//                scheduleDto.getAddressId()
-                2L,
+                scheduleDto.getAddressId(),
                 scheduleDto.getTime());
-        return "redirect:/";
+        return ResponseEntity.ok().body(scheduleDto);
     }
 }
