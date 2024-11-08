@@ -8,7 +8,7 @@ import java.util.List;
 
 public class WeatherStation {
 
-    private WeatherInfo weatherInfo;
+    private HashMap<Integer, WeatherInfo> weatherApi=new HashMap<>();
     private Location location;
     private HashMap<Integer, List<WeatherObserver>> observers=new HashMap<>();
 
@@ -35,14 +35,18 @@ public class WeatherStation {
         }
     }
 
-    public void update(WeatherInfo weatherInfo, int time){
-        this.weatherInfo=weatherInfo;
-        notifyObserver(time);
+    public void update(HashMap<Integer, WeatherInfo> api){
+
+        for(int time: api.keySet()){
+            this.weatherApi.put(time, api.get(time));
+            notifyObserver(time);
+        }
+
     }
 
     public void notifyObserver(int time){
         for(WeatherObserver ob : observers.get(time)){
-            ob.update(weatherInfo);
+            ob.update(weatherApi.get(time));
         }
     }
 }
