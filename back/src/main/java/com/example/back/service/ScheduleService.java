@@ -26,7 +26,7 @@ public class ScheduleService {
     @Transactional
     public void addSchedule(Long memberId, Long addrId, int time){
         Member member = memberRepository.findOne(memberId);
-        Address addr = addressRepository.findOne(2L);
+        Address addr = addressRepository.findOne(addrId);
         Schedule schedule = Schedule.createSchedule(member, addr, time);
         scheduleRepository.save(schedule);
     }
