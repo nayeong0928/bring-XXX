@@ -4,6 +4,9 @@ import com.example.back.weather.WeatherStation;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 public class Address {
@@ -23,6 +26,9 @@ public class Address {
     @Transient
     private WeatherStation weatherStation;
 
+    @OneToMany(mappedBy = "address")
+    private List<Schedule> schedules=new ArrayList<>();
+
     protected Address(){}
 
     public Address(String code, String addr1, String addr2, String addr3, String nx, String ny) {
@@ -31,11 +37,20 @@ public class Address {
         this.addr2 = addr2;
         this.addr3 = addr3;
         this.location=new Location(nx, ny);
-        weatherStation = new WeatherStation(location); // 각 장소에 대하여 API Subject 등록
     }
 
     @Override
     public String toString() {
         return addr1+" "+addr2+" "+addr3;
     }
+
+    @PostLoad
+    public void initWeatherStation() {
+        weatherStation=new WeatherStation(location);
+
+        for(Schedule schedule: schedules){
+            weatherStation.addObserver(schedule.getTime(), schedule.getId());
+        }
+    }
+
 }

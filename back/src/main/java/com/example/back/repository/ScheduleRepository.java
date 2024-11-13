@@ -23,4 +23,8 @@ public class ScheduleRepository {
                 .getSingleResult();
     }
 
+    public List<Schedule> findAll(){
+        return em.createQuery("select s from Schedule s", Schedule.class)
+                .getResultList();
+    }
 }

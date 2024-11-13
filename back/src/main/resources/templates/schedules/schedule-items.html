@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>시간</th>
+                <th>아이템</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${itemSchedule}">
+                <td th:text="${entry.key}"></td>
+                <td>
+                    <table class="table">
+                        <tr th:each="list : ${entry.value}">
+                            <td th:text="${list}"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+<script>
+</script>
+
+</body>
+</html>

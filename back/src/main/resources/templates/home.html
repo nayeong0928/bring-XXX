@@ -13,6 +13,10 @@
 
     <div class="jumbotron">
         <h1>dashboard</h1>
+        <p class="lead">아이템 조회 기능</p>
+        <p>
+            <a class="btn btn-lg btn-secondary" href="/items">아이템 조회하기</a>
+        </p>
         <p class="lead">회원 기능</p>
         <p>
             <a class="btn btn-lg btn-secondary" href="/members/new">회원 추가</a>
@@ -34,6 +38,7 @@
                 <th>#</th>
                 <th>이름</th>
                 <th>스케줄</th>
+                <th>소지품</th>
             </tr>
             </thead>
             <tbody>
@@ -43,6 +48,10 @@
                 <td>
                     <a class="btn btn-sm btn-outline-primary"
                        th:href="@{/schedules/{id} (id=${member.id})}">등록</a>
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary"
+                       th:href="@{/items/{id} (id=${member.id})}">조회</a>
                 </td>
             </tr>
             </tbody>

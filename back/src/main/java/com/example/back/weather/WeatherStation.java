@@ -1,6 +1,7 @@
 package com.example.back.weather;
 
 import com.example.back.entity.Location;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class WeatherStation {
     private HashMap<Integer, List<WeatherObserver>> observers=new HashMap<>();
 
     public WeatherStation(Location location) {
-        this.location = location;
+        this.location=location;
 
         for(int time=0; time<24; time++){
             observers.put(time, new ArrayList<>());
@@ -48,5 +49,18 @@ public class WeatherStation {
         for(WeatherObserver ob : observers.get(time)){
             ob.update(weatherApi.get(time));
         }
+    }
+
+    public List<String> itemList(Long scheduleId){
+        for(int time: weatherApi.keySet()){
+            for(WeatherObserver ob : observers.get(time)){
+                if(ob.getScheduleId().equals(scheduleId)){
+                    List<String> items = ob.items();
+                    return items;
+                }
+            }
+        }
+
+        return null;
     }
 }

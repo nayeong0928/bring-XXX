@@ -3,6 +3,7 @@ package com.example.back.service;
 import com.example.back.weather.WeatherInfo;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Slf4j
 public class WeatherResponseParser {
 
     private static HashMap<Integer, WeatherInfo> weatherApi=new HashMap<>();
@@ -40,6 +42,7 @@ public class WeatherResponseParser {
     }
 
     private static JSONArray getWeatherItems(String str) {
+        log.info("str: {}", str);
         JSONObject jsonObject=new JSONObject(str);
         JSONObject response = (JSONObject) jsonObject.get("response");
         JSONObject body = (JSONObject) response.get("body");

@@ -126,7 +126,9 @@
     function sendData(memberId){
         for (const t of selectedTime){
             addSchedule(memberId, t);
+            console.log("send post time t: "+t);
         }
+        // location.reload();
     }
 
     // 데이터를 서버로 POST 요청을 보내는 함수
@@ -149,7 +151,6 @@
             .then(response => response.json())  // 응답을 JSON으로 파싱
             .then(result => {
                 console.log('Success:', result);  // 서버 응답 처리
-                location.reload();
             })
             .catch(error => {
                 console.error('Error:', error);  // 오류 처리
