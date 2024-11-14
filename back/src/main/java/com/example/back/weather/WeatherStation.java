@@ -1,66 +1,45 @@
 package com.example.back.weather;
 
 import com.example.back.entity.Location;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 public class WeatherStation {
 
-    private HashMap<Integer, WeatherInfo> weatherApi=new HashMap<>();
-    private Location location;
-    private HashMap<Integer, List<WeatherObserver>> observers=new HashMap<>();
+    private int time;
+    private WeatherInfo weatherInfo;
+    private HashMap<Long, WeatherObserver> observers; // scheduleId-스케줄 구독자 쌍
 
-    public WeatherStation(Location location) {
-        this.location=location;
-
-        for(int time=0; time<24; time++){
-            observers.put(time, new ArrayList<>());
-        }
+    public WeatherStation(int time){
+        this.time=time;
+        this.weatherInfo=new WeatherInfo();
+        observers=new HashMap<>();
     }
 
-    public void addObserver(int time, Long scheduleId){
-        WeatherObserver observer=new WeatherObserver(scheduleId);
-        observers.get(time).add(observer);
+    public void addObserver(Long scheduleId){
+        observers.put(scheduleId, new WeatherObserver());
     }
 
-    public void removeObserver(int time, Long scheduleId){
-
-        for(WeatherObserver ob : observers.get(time)){
-            if(ob.getScheduleId().equals(scheduleId)){
-                observers.get(time).remove(ob);
-                return;
-            }
-        }
+    public void deleteObserver(Long scheduleId){
+        observers.remove(scheduleId);
     }
 
-    public void update(HashMap<Integer, WeatherInfo> api){
-
-        for(int time: api.keySet()){
-            this.weatherApi.put(time, api.get(time));
-            notifyObserver(time);
-        }
-
+    public WeatherObserver getWeatherObserver(Long scheduleId){
+        return observers.get(scheduleId);
     }
 
-    public void notifyObserver(int time){
-        for(WeatherObserver ob : observers.get(time)){
-            ob.update(weatherApi.get(time));
-        }
-    }
+    public void update(String category, String value){
+        this.weatherInfo.setWeatherInfo(category, value);
 
-    public List<String> itemList(Long scheduleId){
-        for(int time: weatherApi.keySet()){
-            for(WeatherObserver ob : observers.get(time)){
-                if(ob.getScheduleId().equals(scheduleId)){
-                    List<String> items = ob.items();
-                    return items;
-                }
-            }
+        for(Long key: observers.keySet()){
+            observers.get(key).update(weatherInfo);
         }
-
-        return null;
     }
 }

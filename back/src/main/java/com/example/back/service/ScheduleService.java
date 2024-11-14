@@ -1,6 +1,7 @@
 package com.example.back.service;
 
 import com.example.back.dto.ScheduleDto;
+import com.example.back.dto.ScheduleItemDto;
 import com.example.back.dto.TimeBlock;
 import com.example.back.entity.Address;
 import com.example.back.entity.Location;
@@ -12,6 +13,7 @@ import com.example.back.repository.ScheduleRepository;
 import com.example.back.weather.WeatherInfo;
 import com.example.back.weather.WeatherObserver;
 import com.example.back.weather.WeatherStation;
+import com.example.back.weather.WeatherStationManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +40,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
+    private final WeatherStationManager weatherStationManager;
 
     @Value("${serviceKey}")
     private String serviceKey;
@@ -75,37 +78,41 @@ public class ScheduleService {
     public void notice() throws IOException {
 
         List<Schedule> schedules = scheduleRepository.findAll();
-        
+        List<Address> addresses = addressRepository.addressAll();
+
+        for(Address address: addresses){
+            weatherStationManager.addLocation(address.getCode());
+        }
+
         for(Schedule schedule: schedules){
             Address addr = schedule.getAddress();
-            Location location = addr.getLocation();
-            WeatherStation station=addr.getWeatherStation();
-            HashMap<Integer, WeatherInfo> api = apiRequest(location.getNx(), location.getNy());
-            station.update(api);
+            weatherStationManager.addObserverToStation(addr.getCode(), schedule.getTime(), schedule.getId());
+            weatherStationManager.parse(addr.getCode(), apiRequest(addr.getLocation().getNx(), addr.getLocation().getNy()));
         }
+        weatherStationManager.print();
     }
 
-    public Map<Integer, List<String>> itemsBySchedule(Long memberId){
+    public List<ScheduleItemDto> itemsBySchedule(Long memberId){
+        weatherStationManager.print();
         Member member = memberRepository.findOne(memberId);
-        Map<Integer, List<String>> items=new HashMap<>();
+        List<ScheduleItemDto> itemList=new ArrayList<>();
 
         for(Schedule schedule: member.getSchedules()){
-            List<String> itemList = schedule.getAddress().getWeatherStation().itemList(schedule.getId());
-            log.info("itemList: {}", itemList);
-            items.put(schedule.getTime(), itemList);
+            WeatherObserver observer = weatherStationManager.findObserver(schedule.getAddress().getCode(),
+                    schedule.getTime(),
+                    schedule.getId());
+            itemList.add(new ScheduleItemDto(schedule.getTime(), observer.getItemList()));
         }
 
-        return items;
+        return itemList.stream().sorted().collect(Collectors.toList());
     }
 
     /**
-     * 해당 장소의 시간별 날씨 정보를 리턴한다
-     * @param nx
-     * @param ny
+     * 해당 장소의 시간별 결과 open api 요청 & WeatherStation에 세팅
      * @return
      * @throws IOException
      */
-    public HashMap<Integer, WeatherInfo> apiRequest(String nx, String ny) throws IOException{
+    public String apiRequest(String nx, String ny) throws IOException{
         String today= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + serviceKey); /*Service Key*/
@@ -134,9 +141,6 @@ public class ScheduleService {
         }
         rd.close();
         conn.disconnect();
-//        System.out.println(sb.toString());
-        HashMap<Integer, WeatherInfo> result = WeatherResponseParser.parse(sb.toString());
-//        System.out.println(WeatherResponseParser.print());
-        return result;
+        return sb.toString();
     }
 }

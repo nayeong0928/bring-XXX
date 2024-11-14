@@ -15,15 +15,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="entry : ${itemSchedule}">
-                <td th:text="${entry.key}"></td>
-                <td>
-                    <table class="table">
-                        <tr th:each="list : ${entry.value}">
-                            <td th:text="${list}"></td>
-                        </tr>
-                    </table>
-                </td>
+            <tr th:each="item: ${itemSchedule}">
+                <td th:text="${item.getTime()}"></td>
+                <td th:text="${item.getItems()}"></td>
             </tr>
             </tbody>
         </table>

@@ -1,6 +1,7 @@
 package com.example.back.controller;
 
 import com.example.back.dto.ScheduleDto;
+import com.example.back.dto.ScheduleItemDto;
 import com.example.back.dto.TimeBlock;
 import com.example.back.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,8 @@ public class ScheduleController {
     @GetMapping("/items/{id}")
     public String scheduleItems(@PathVariable("id") Long id, Model model){
 
-        Map<Integer, List<String>> result = scheduleService.itemsBySchedule(id);
-        model.addAttribute("itemSchedule", result);
+        List<ScheduleItemDto> scheduleItemDto = scheduleService.itemsBySchedule(id);
+        model.addAttribute("itemSchedule", scheduleItemDto);
 
         return "/schedules/schedule-items";
     }

@@ -11,17 +11,11 @@ public class WeatherInfo {
     private SkyStatus skyStatus;
     private WaterStatus waterStatus;
 
-    public static boolean validInfo(String category){
-        String[] categories={ "TMP", "SKY", "PTY"};
-
-        for(String ca : categories){
-            if(ca.equals(ca)) return true;
-        }
-
-        return false;
-    }
-
     public void setWeatherInfo(String category, String value){
+
+        if(!validInfo(category)){
+            return;
+        }
 
         switch(category){
             case "TMP": // 온도
@@ -52,6 +46,16 @@ public class WeatherInfo {
                 }
                 break;
         }
+    }
+
+    public boolean validInfo(String category){
+        String[] categories={ "TMP", "SKY", "PTY"};
+
+        for(String ca : categories){
+            if(ca.equals(ca)) return true;
+        }
+
+        return false;
     }
 
     @Override

@@ -3,28 +3,30 @@ package com.example.back.weather;
 import com.example.back.items.ItemListGenerator;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class WeatherObserver {
 
-    private WeatherInfo weatherInfo;
-    private Long scheduleId;
-
-    public WeatherObserver(Long scheduleId){
-        this.scheduleId=scheduleId;
-    }
+    private List<String> items; // 필요한 소지품
 
     public void update(WeatherInfo weatherInfo){
-        this.weatherInfo=weatherInfo;
+        ItemListGenerator listGenerator=new ItemListGenerator();
+        items=listGenerator.getPackingList(weatherInfo);
     }
 
-    /**
-     * 해당 날씨에 필요한 소지품 리스트를 리턴한다
-     * @return
-     */
-    public List<String> items(){
-        ItemListGenerator listGenerator=new ItemListGenerator();
-        return listGenerator.getPackingList(weatherInfo);
+    public String getItemList(){
+
+        if(items==null){
+            return "";
+        }
+
+        StringBuilder sb=new StringBuilder();
+        for(String item: items){
+            sb.append(item);
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }

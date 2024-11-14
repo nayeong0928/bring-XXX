@@ -23,9 +23,6 @@ public class Address {
     @Embedded
     private Location location;
 
-    @Transient
-    private WeatherStation weatherStation;
-
     @OneToMany(mappedBy = "address")
     private List<Schedule> schedules=new ArrayList<>();
 
@@ -42,15 +39,6 @@ public class Address {
     @Override
     public String toString() {
         return addr1+" "+addr2+" "+addr3;
-    }
-
-    @PostLoad
-    public void initWeatherStation() {
-        weatherStation=new WeatherStation(location);
-
-        for(Schedule schedule: schedules){
-            weatherStation.addObserver(schedule.getTime(), schedule.getId());
-        }
     }
 
 }
