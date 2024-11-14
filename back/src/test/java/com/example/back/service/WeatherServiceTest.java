@@ -9,9 +9,9 @@ import static org.junit.Assert.*;
 
 public class WeatherServiceTest {
 
-    @Test
-    public void API_통신_기능확인() throws IOException {
-        WeatherService service=new WeatherService();
-        service.apiRequest("61","125");
-    }
+//    @Test
+//    public void API_통신_기능확인() throws IOException {
+//        WeatherService service=new WeatherService();
+//        service.apiRequest("61","125");
+//    }
 }

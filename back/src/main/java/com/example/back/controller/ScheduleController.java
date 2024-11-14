@@ -1,6 +1,7 @@
 package com.example.back.controller;
 
 import com.example.back.dto.ScheduleDto;
+import com.example.back.dto.ScheduleItemDto;
 import com.example.back.dto.TimeBlock;
 import com.example.back.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,15 @@ public class ScheduleController {
         return "/schedules/timeblock";
     }
 
+    @GetMapping("/items/{id}")
+    public String scheduleItems(@PathVariable("id") Long id, Model model){
+
+        List<ScheduleItemDto> scheduleItemDto = scheduleService.itemsBySchedule(id);
+        model.addAttribute("itemSchedule", scheduleItemDto);
+
+        return "/schedules/schedule-items";
+    }
+
     @PostMapping("/schedules/new")
     @ResponseBody
     public ResponseEntity<?> addSchedule(@RequestBody ScheduleDto scheduleDto){
@@ -38,5 +49,11 @@ public class ScheduleController {
                 scheduleDto.getAddressId(),
                 scheduleDto.getTime());
         return ResponseEntity.ok().body(scheduleDto);
+    }
+
+    @GetMapping("/items")
+    public String updateItems() throws IOException {
+        scheduleService.notice();
+        return "redirect:/";
     }
 }

@@ -4,6 +4,9 @@ import com.example.back.weather.WeatherStation;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 public class Address {
@@ -20,8 +23,8 @@ public class Address {
     @Embedded
     private Location location;
 
-    @Transient
-    private WeatherStation weatherStation;
+    @OneToMany(mappedBy = "address")
+    private List<Schedule> schedules=new ArrayList<>();
 
     protected Address(){}
 
@@ -31,11 +34,11 @@ public class Address {
         this.addr2 = addr2;
         this.addr3 = addr3;
         this.location=new Location(nx, ny);
-        weatherStation = new WeatherStation(location); // 각 장소에 대하여 API Subject 등록
     }
 
     @Override
     public String toString() {
         return addr1+" "+addr2+" "+addr3;
     }
+
 }

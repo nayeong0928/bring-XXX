@@ -18,7 +18,7 @@ public class Schedule {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
 
@@ -38,7 +38,6 @@ public class Schedule {
         schedule.setMember(member);
         schedule.setAddress(address);
         schedule.time=time;
-        address.getWeatherStation().addObserver(time, schedule.getId());
         return schedule;
     }
 }
