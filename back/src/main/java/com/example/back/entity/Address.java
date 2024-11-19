@@ -1,6 +1,5 @@
 package com.example.back.entity;
 
-import com.example.back.weather.WeatherStation;
 import jakarta.persistence.*;
 import lombok.Getter;
 

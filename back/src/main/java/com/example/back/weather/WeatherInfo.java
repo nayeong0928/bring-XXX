@@ -11,7 +11,7 @@ public class WeatherInfo {
     private SkyStatus skyStatus;
     private WaterStatus waterStatus;
 
-    public void setWeatherInfo(String category, String value){
+    public void addWeatherInfo(String category, String value){
 
         if(!validInfo(category)){
             return;

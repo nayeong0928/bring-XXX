@@ -1,7 +1,5 @@
 package com.example.back.weather;
 
-import com.example.back.entity.Address;
-import com.example.back.entity.Location;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,8 +8,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Component
 @Slf4j
@@ -21,25 +17,27 @@ public class WeatherStationManager {
      * weatherStations: 장소-시간별 기상관측
      *      HashMap<Integer, WeatherStation>: 해당시간-관측소
      */
-    private HashMap<String, HashMap<Integer, WeatherStation>> weatherStations=new HashMap<>();
+    private HashMap<String, HashMap<Integer, WeatherInfo>> weatherStations=new HashMap<>();
 
     public void addLocation(String addrCode){
-        HashMap<Integer, WeatherStation> hashMap=new HashMap<>();
+        HashMap<Integer, WeatherInfo> hashMap=new HashMap<>();
 
         for(int time=0; time<=24; time++){
-            hashMap.put(time, new WeatherStation((time)));
+            hashMap.put(time, new WeatherInfo());
         }
 
         weatherStations.put(addrCode, hashMap);
     }
 
-    public void addObserverToStation(String code, int time, Long scheduleId){
-        WeatherStation weatherStation = weatherStations.get(code).get(time);
-        weatherStation.addObserver(scheduleId);
-    }
+    public WeatherInfo getWeatherInfo(String addrCode, int time){
 
-    public WeatherObserver findObserver(String code, int time, Long scheduleId){
-        return weatherStations.get(code).get(time).getWeatherObserver(scheduleId);
+        HashMap<Integer, WeatherInfo> weatherStation = weatherStations.get(addrCode);
+
+        if(weatherStation.get(time)==null){
+            weatherStation.put(time, new WeatherInfo());
+        }
+
+        return weatherStation.get(time);
     }
 
     /**
@@ -64,7 +62,7 @@ public class WeatherStationManager {
             String value=weather.getString("fcstValue");
             int time = Integer.parseInt(timeStr);
 
-            weatherStations.get(code).get(time).update(category, value);
+            getWeatherInfo(code, time).addWeatherInfo(category, value);
         }
 
     }
@@ -98,14 +96,4 @@ public class WeatherStationManager {
         return false;
     }
 
-    public void print() {
-
-        for(Map.Entry<String, HashMap<Integer, WeatherStation>> entry: weatherStations.entrySet()){
-            log.info("WeatherStation about Location[ {} ]", entry.getKey());
-            for(Map.Entry<Integer, WeatherStation> en: entry.getValue().entrySet()){
-                log.info("observers: {}, {}", en.getKey(), en.getValue().getObservers().size());
-            }
-        }
-
-    }
 }

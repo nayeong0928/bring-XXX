@@ -4,15 +4,13 @@ import com.example.back.dto.ScheduleDto;
 import com.example.back.dto.ScheduleItemDto;
 import com.example.back.dto.TimeBlock;
 import com.example.back.entity.Address;
-import com.example.back.entity.Location;
 import com.example.back.entity.Member;
 import com.example.back.entity.Schedule;
+import com.example.back.items.ItemListGenerator;
 import com.example.back.repository.AddressRepository;
 import com.example.back.repository.MemberRepository;
 import com.example.back.repository.ScheduleRepository;
 import com.example.back.weather.WeatherInfo;
-import com.example.back.weather.WeatherObserver;
-import com.example.back.weather.WeatherStation;
 import com.example.back.weather.WeatherStationManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -86,25 +84,23 @@ public class ScheduleService {
 
         for(Schedule schedule: schedules){
             Address addr = schedule.getAddress();
-            weatherStationManager.addObserverToStation(addr.getCode(), schedule.getTime(), schedule.getId());
             weatherStationManager.parse(addr.getCode(), apiRequest(addr.getLocation().getNx(), addr.getLocation().getNy()));
         }
-        weatherStationManager.print();
     }
 
     public List<ScheduleItemDto> itemsBySchedule(Long memberId){
-        weatherStationManager.print();
         Member member = memberRepository.findOne(memberId);
         List<ScheduleItemDto> itemList=new ArrayList<>();
+        ItemListGenerator itemListGenerator=new ItemListGenerator();
 
         for(Schedule schedule: member.getSchedules()){
-            WeatherObserver observer = weatherStationManager.findObserver(schedule.getAddress().getCode(),
-                    schedule.getTime(),
-                    schedule.getId());
-            itemList.add(new ScheduleItemDto(schedule.getTime(), observer.getItemList()));
+            WeatherInfo weatherInfo = weatherStationManager.getWeatherInfo(schedule.getAddress().getCode(), schedule.getTime());
+            itemList.add(new ScheduleItemDto(schedule.getTime(), itemListGenerator.getPackingList(weatherInfo).toString()));
         }
 
-        return itemList.stream().sorted().collect(Collectors.toList());
+        return itemList.stream()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     /**
