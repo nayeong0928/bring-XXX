@@ -10,11 +10,12 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -31,14 +32,19 @@ public class AddressService {
     public void parseExcel() throws IOException {
         ClassPathResource resource=new ClassPathResource("data/addr_data.xlsx");
         Path filePath= Paths.get(resource.getURI());
+        ClassPathResource addrResource=new ClassPathResource("data/addr.sql");
+        Path addrFilePath= Paths.get(addrResource.getURI());
+
+        FileWriter fw=new FileWriter(addrFilePath.toFile());
 
         FileInputStream file=new FileInputStream(filePath.toFile());
         ZipSecureFile.setMinInflateRatio(0);
         XSSFWorkbook workbook=new XSSFWorkbook(file);
         XSSFSheet sheet=workbook.getSheetAt(0);
 
+        fw.write("insert into address (address_id, code, addr1, addr2, addr3, nx, ny) values \n");
+
         for(int i=sheet.getFirstRowNum()+1;i<sheet.getLastRowNum(); i++){
-            log.info("index: {}", i);
             XSSFRow row=sheet.getRow(i);
             String code = readRow(row, 1);
             String step1=readRow(row, 2);
@@ -46,20 +52,24 @@ public class AddressService {
             String step3=readRow(row, 4);
             String nx=readRow(row, 5);
             String ny=readRow(row, 6);
-            addressRepository.save(new Address(code, step1, step2, step3, nx, ny));
+//            addressRepository.save(new Address(code, step1, step2, step3, nx, ny));
+            fw.write("(" + i+ ", "+code+ ", "+step1+ ", "+step2+ ", "+step3+ ", "+nx+ ", "+ny+"), \n");
         }
-
+        fw.close();
+        file.close();
     }
+
+    private final ResourceLoader resourceLoader;
 
     private String readRow(XSSFRow row, int idx){
         String result=null;
 
-        if(row.getCell(idx)==null) return null;
+        if(row.getCell(idx)==null) return "''";
 
         if (row.getCell(idx).getCellType() == CellType.NUMERIC) {
-            result = String.valueOf(row.getCell(idx).getNumericCellValue());
+            result = "'"+String.valueOf(row.getCell(idx).getNumericCellValue())+"'";
         } else {
-            result = row.getCell(idx).getStringCellValue();
+            result = "'"+row.getCell(idx).getStringCellValue()+"'";
         }
 
         return result;
